@@ -1,23 +1,35 @@
 package org.example;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import org.json.JSONObject;
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.*;
+import java.net.*;
+import java.util.*; // Përfshin Scanner, Properties, ArrayList, List
+import org.json.*;  // Përfshin JSONObject
 public class Main {
     public static void main(String[] args) {
         Graph myGraph = new Graph();
+        Properties prop = new Properties();
+        String apiKey = "";
+        try (InputStream input = Main.class.getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                System.out.println("Gabim: Nuk gjeta dot config.properties");
+                return;
+            }
+            prop.load(input);
+            apiKey = prop.getProperty("api_key");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         try {
-            // Lidhja me API
-            String urlString = " https://v6.exchangerate-api.com/v6/4a7bd937be58140641edfdee/latest/USD";
+            // Tani urlString ndërtohet me variablin 'apiKey'
+            String urlString = "https://v6.exchangerate-api.com/v6/" + apiKey + "/latest/USD";
+
             URL url = new URL(urlString);
             HttpURLConnection request = (HttpURLConnection) url.openConnection();
             request.connect();
+
+            // ... pjesa tjetër e kodit tënd mbetet e njëjtë ...
             Scanner scanner = new Scanner(new InputStreamReader(request.getInputStream()));
-            String response = scanner.useDelimiter("\\A").next(); // KËTU krijohet 'response'
+            String response = scanner.useDelimiter("\\A").next();
             scanner.close();
 
 
